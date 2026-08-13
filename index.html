@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>МЕТА - Справочники архитектора</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f7fa;
+            color: #1a1a1a;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* БОКОВАЯ ПАНЕЛЬ */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 32px 20px;
+            overflow-y: auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            padding: 12px 16px;
+            background: #e8f0ff;
+            border-radius: 8px;
+        }
+        
+        .logo img {
+            height: 32px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2C79EC;
+        }
+        
+        .nav-section {
+            margin-bottom: 32px;
+        }
+        
+        .nav-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding: 0 12px;
+        }
+        
+        .nav-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #f5f7fa;
+            color: #2C79EC;
+        }
+        
+        .nav-item.active {
+            background: #e8f0ff;
+            color: #2C79EC;
+            border-left-color: #2C79EC;
+            font-weight: 600;
+        }
+        
+        .nav-count {
+            font-size: 12px;
+            color: #999;
+            margin-left: 6px;
+        }
+        
+        /* ОСНОВНАЯ ОБЛАСТЬ */
+        .main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        
+        .page-header {
+            margin-bottom: 40px;
+        }
+        
+        .level-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #2C79EC;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        
+        .page-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* КАРТОЧКИ */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .card.blue::before {
+            background: linear-gradient(90deg, #2C79EC, #4a9eff);
+        }
+        
+        .card.orange::before {
+            background: linear-gradient(90deg, #ff9800, #ffb74d);
+        }
+        
+        .card.teal::before {
+            background: linear-gradient(90deg, #00bcd4, #4dd0e1);
+        }
+        
+        .card.purple::before {
+            background: linear-gradient(90deg, #9c27b0, #ba68c8);
+        }
+        
+        .card:hover {
+            box-shadow: 0 12px 32px rgba(44, 121, 236, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .card-status {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-available {
+            background: #e3f2fd;
+            color: #2C79EC;
+        }
+        
+        .status-work {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .card-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #2C79EC;
+            font-weight: 600;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+        
+        .card-link:hover {
+            gap: 12px;
+        }
+        
+        /* СКРЫТЫЕ ВКЛАДКИ */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+                padding: 20px 16px;
+            }
+            
+            .main {
+                padding: 24px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 16px;
+            }
+            
+            .main {
+                padding: 16px;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- БОКОВАЯ ПАНЕЛЬ -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="meta-logo.svg" alt="МЕТА">
+                <div class="logo-text">МЕТА</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Справочники</div>
+                <div class="nav-item active" onclick="showTab('tech-rooms')">
+                    Технические помещения <span class="nav-count">10</span>
+                </div>
+                <div class="nav-item" onclick="showTab('em-parking')">
+                    Парковка ЭМ <span class="nav-count">10</span>
+                </div>
+                <div class="nav-item" onclick="showTab('parking-floors')">
+                    Полы автостоянки <span class="nav-count">5</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Информация</div>
+                <div class="nav-item" onclick="showTab('about')">
+                    О МЕТА
+                </div>
+                <div class="nav-item" onclick="showTab('standards')">
+                    Стандарты и нормы
+                </div>
+            </div>
+        </div>
+        
+        <!-- ОСНОВНАЯ ОБЛАСТЬ -->
+        <div class="main">
+            <!-- ТАБ: ТЕХНИЧЕСКИЕ ПОМЕЩЕНИЯ -->
+            <div id="tech-rooms" class="tab-content active">
+                <div class="page-header">
+                    <div class="level-badge">Уровень 1</div>
+                    <h1 class="page-title">Технические помещения МКД</h1>
+                    <p class="page-desc">Выберите помещение, чтобы узнать его параметры и требования</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card blue">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">ИТП (Индивидуальный тепловой пункт)</h3>
+                        <p class="card-desc">50-70 м², огнестойкость EI 60, мех. вытяжка, антипаника</p>
+                        <a class="card-link" onclick="alert('Подробно: 50-70 м², огнестойкость EI 60, мин расстояния от помещений, требования к вентиляции и прочее')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card blue">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">НСП (Насосная)</h3>
+                        <p class="card-desc">12-25 м², изоляция Rw ≥ 50 дБ, только наружу/коридор</p>
+                        <a class="card-link" onclick="alert('Подробно: размеры, требования по звукоизоляции и расположению')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card orange">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Трансформаторная</h3>
+                        <p class="card-desc">25-40 м², огнестойкость EI 90, Rw ≥ 55 дБ</p>
+                        <a class="card-link" onclick="alert('Подробно: требования и расстояния до жилых комнат')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card teal">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Машинный зал лифтов</h3>
+                        <p class="card-desc">Изоляция Rw ≥ 50 дБ, не над жилыми спальнями</p>
+                        <a class="card-link" onclick="alert('Подробно: требования расположения и параметры')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card purple">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Электрощитовая ВРУ</h3>
+                        <p class="card-desc">12-15 м², огнестойкость EI 60, мин 1.5 м до насосной</p>
+                        <a class="card-link" onclick="alert('Подробно: параметры и требования к расстояниям')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card blue">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">КУИ (Комната учета и испытаний)</h3>
+                        <p class="card-desc">3-5 м², техподвал или 1 этаж, с санузлом и поддоном</p>
+                        <a class="card-link" onclick="alert('Подробно: параметры размещения и оборудования')">Узнать подробнее →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ТАБ: ПАРКОВКА ЭМ -->
+            <div id="em-parking" class="tab-content">
+                <div class="page-header">
+                    <div class="level-badge">Уровень 1</div>
+                    <h1 class="page-title">Парковка электромобилей</h1>
+                    <p class="page-desc">Варианты размещения ЭМ парковок по СП 113 и СП 551</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card blue">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Открытая площадка С0</h3>
+                        <p class="card-desc">Неограниченное количество ЭМ, любые зарядные</p>
+                        <a class="card-link" onclick="alert('Открытые стоянки класса С0 и С1 без специальных требований')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card orange">
+                        <div class="card-status status-work">В работе</div>
+                        <h3 class="card-title">Закрытая ≤1200 м²</h3>
+                        <p class="card-desc">Любое количество ЭМ без выделения в секции</p>
+                        <a class="card-link" onclick="alert('Требования для закрытых стоянок до 1200 м²')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card teal">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Закрытая >1200 м² и ≤10 ЭМ</h3>
+                        <p class="card-desc">Без обязательного разделения на секции</p>
+                        <a class="card-link" onclick="alert('Параметры для стоянок большей площади с малым числом ЭМ')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card purple">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Разделение перегородками</h3>
+                        <p class="card-desc">Вариант А: стены EI 60+, до 10 ЭМ в секции</p>
+                        <a class="card-link" onclick="alert('Требования для разделения ЭМ зон перегородками')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card blue">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Разделение свободным пространством</h3>
+                        <p class="card-desc">Вариант Б: 8 м свободные, без горючей нагрузки</p>
+                        <a class="card-link" onclick="alert('Требования для разделения зон свободным пространством')">Узнать подробнее →</a>
+                    </div>
+                    
+                    <div class="card orange">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Разделение с дренчерами</h3>
+                        <p class="card-desc">Вариант В: 6 м + система дренчеров 1 л/с/м</p>
+                        <a class="card-link" onclick="alert('Требования для разделения с использованием дренчер-систем')">Узнать подробнее →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ТАБ: ПОЛЫ АВТОСТОЯНКИ -->
+            <div id="parking-floors" class="tab-content">
+                <div class="page-header">
+                    <div class="level-badge">Уровень 1</div>
+                    <h1 class="page-title">Полы автостоянки</h1>
+                    <p class="page-desc">Варианты конструкции полов парковок с анализом себестоимости</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card blue">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Вариант 3 - Рекомендуемый</h3>
+                        <p class="card-desc">Уклон + лоток с уклоном. ₽5.1М / ₽79,952 за м/м</p>
+                        <a class="card-link" href="parking_floors_interactive.html">Открыть справочник →</a>
+                    </div>
+                    
+                    <div class="card orange">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Вариант 5 - Монолитный лоток</h3>
+                        <p class="card-desc">Монолитная конструкция. ₽3.7М / ₽57,864 за м/м</p>
+                        <a class="card-link" href="parking_floors_interactive.html">Открыть справочник →</a>
+                    </div>
+                    
+                    <div class="card teal">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Вариант 4 - Уклон без лотка</h3>
+                        <p class="card-desc">Только уклон без лотка. ₽3.2М / ₽50,448 за м/м</p>
+                        <a class="card-link" href="parking_floors_interactive.html">Открыть справочник →</a>
+                    </div>
+                    
+                    <div class="card purple">
+                        <div class="card-status status-available">Доступно</div>
+                        <h3 class="card-title">Полная таблица сравнения</h3>
+                        <p class="card-desc">Все варианты с полным анализом затрат и норм</p>
+                        <a class="card-link" href="parking_floors_interactive.html">Открыть справочник →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ТАБ: О МЕТА -->
+            <div id="about" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">О МЕТА</h1>
+                </div>
+                
+                <div class="cards-grid" style="grid-template-columns: 1fr;">
+                    <div class="card blue">
+                        <h3 class="card-title">Справочники для архитектора</h3>
+                        <p class="card-desc">МЕТА — система интерактивных справочников для проектирования многоквартирных домов. Все справочники основаны на действующих СП и ГОСТ и содержат актуальные требования к техническим помещениям, парковкам и конструкциям.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ТАБ: СТАНДАРТЫ -->
+            <div id="standards" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Стандарты и нормы</h1>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card blue">
+                        <h3 class="card-title">СП 54.13330.2016</h3>
+                        <p class="card-desc">Многоквартирные жилые дома. Основные требования проектирования</p>
+                    </div>
+                    <div class="card orange">
+                        <h3 class="card-title">СП 60.13330.2016</h3>
+                        <p class="card-desc">Отопление, вентиляция и кондиционирование воздуха</p>
+                    </div>
+                    <div class="card teal">
+                        <h3 class="card-title">СП 113.13330.2016</h3>
+                        <p class="card-desc">Стоянки автомобилей. Стандарты проектирования</p>
+                    </div>
+                    <div class="card purple">
+                        <h3 class="card-title">СП 551.1325800.2011</h3>
+                        <p class="card-desc">Размещение электрозаправных станций для ЭМ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabId) {
+            // Скрыть все табы
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Показать нужный таб
+            document.getElementById(tabId).classList.add('active');
+            
+            // Обновить активность в меню
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+        }
+    </script>
+</body>
+</html>
