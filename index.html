@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>МЕТА - Справочники архитектора</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f7fa;
+            color: #1a1a1a;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* БОКОВАЯ ПАНЕЛЬ */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 32px 20px;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            padding: 12px 16px;
+            background: #e8f0ff;
+            border-radius: 8px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2C79EC;
+        }
+        
+        .nav-section {
+            margin-bottom: 32px;
+        }
+        
+        .nav-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding: 0 12px;
+        }
+        
+        .nav-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #f5f7fa;
+            color: #2C79EC;
+        }
+        
+        .nav-item.active {
+            background: #e8f0ff;
+            color: #2C79EC;
+            border-left-color: #2C79EC;
+            font-weight: 600;
+        }
+        
+        .nav-count {
+            font-size: 12px;
+            color: #999;
+            margin-left: 6px;
+        }
+        
+        /* ОСНОВНАЯ ОБЛАСТЬ */
+        .main {
+            margin-left: 280px;
+            padding: 40px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .page-header {
+            margin-bottom: 40px;
+        }
+        
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        
+        .page-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* КАРТОЧКИ */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2C79EC, #4a9eff);
+        }
+        
+        .card:hover {
+            box-shadow: 0 12px 32px rgba(44, 121, 236, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+        
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .card-link {
+            font-size: 14px;
+            color: #2C79EC;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            text-decoration: none;
+            display: inline-block;
+            padding: 4px 0;
+        }
+        
+        .card-link:hover {
+            text-decoration: underline;
+        }
+        
+        .card-details {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+            margin-top: 12px;
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .card-details.expanded {
+            display: block;
+            max-height: 1000px;
+        }
+        
+        .card-details strong {
+            color: #1a1a1a;
+            display: block;
+            margin-top: 8px;
+        }
+        
+        /* СКРЫТЫЕ ВКЛАДКИ */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main {
+                margin-left: 240px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            
+            .main {
+                margin-left: 0;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- БОКОВАЯ ПАНЕЛЬ -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-text">МЕТА</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Справочники</div>
+                <div class="nav-item active" onclick="showTab('tech-rooms')">
+                    Технические помещения <span class="nav-count">10</span>
+                </div>
+                <div class="nav-item" onclick="showTab('em-parking')">
+                    Парковка ЭМ <span class="nav-count">7</span>
+                </div>
+                <div class="nav-item" onclick="showTab('ventilation')">
+                    Вентиляция и сантехника
+                </div>
+
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Информация</div>
+                <div class="nav-item" onclick="showTab('about')">
+                    О МЕТА
+                </div>
+            </div>
+        </div>
+        
+        <!-- ОСНОВНАЯ ОБЛАСТЬ -->
+        <div class="main">
+            <!-- ТАБ: ТЕХНИЧЕСКИЕ ПОМЕЩЕНИЯ -->
+            <div id="tech-rooms" class="tab-content active">
+                <div class="page-header">
+                    <h1 class="page-title">Технические помещения МКД</h1>
+                    <p class="page-desc">Полный справочник требований к техническим помещениям многоквартирного дома</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3 class="card-title">ИТП - Индивидуальный тепловой пункт</h3>
+                        <p class="card-desc">Основное помещение для теплоснабжения дома</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 50-70 м² (до 20 тыс м²) или 65-100 м² (20-50 тыс м²)
+                            <strong>Размещение:</strong> Техподвал у наружной стены со стороны ввода теплоносителя
+                            <strong>Эвакуация:</strong> Выход на улицу или в коридор. Расстояние не более 12 м от выхода. При длине >12 м - не менее 2 выходов
+                            <strong>Двери:</strong> Противопожарная (EI 60 или EI 30), открывается наружу, запоры "Антипаника", ширина ≥0.75 м
+                            <strong>Вентиляция:</strong> Обязательна механическая вытяжка
+                            <strong>Огнестойкость:</strong> EI 60
+                            <strong>Запреты:</strong> ЗАПРЕЩЕНО над/под жилыми комнатами (максимум под коридорами)
+                            <strong>Нормы:</strong> СП 510.1325800.2022 п.7.10
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">НСП - Насосная станция пожаротушения</h3>
+                        <p class="card-desc">Для размещения циркуляционных насосов пожаротушения</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 15-20 м² (до 54 м) или 30-40 м² (>54 м)
+                            <strong>Размещение:</strong> Техподвал рядом с вводом ХВС. Отдельный электроввод. Вывод сухотруба на 1 этаж
+                            <strong>Эвакуация:</strong> Выход наружу или в коридор/лестничную клетку с выходом наружу. ЗАПРЕЩЕНО: через паркинг, кладовые, жилые зоны
+                            <strong>Двери:</strong> Противопожарная (EI 60 или EI 30), открывается наружу, запоры "Антипаника", ширина ≥0.75 м
+                            <strong>Вентиляция:</strong> Обязательна механическая вытяжка
+                            <strong>Пол:</strong> Вибровыбивающий
+                            <strong>Звукоизоляция:</strong> Rw ≥ 50 дБ
+                            <strong>Требования:</strong> На домах >28 м (>9 этажей). Отделена противопожарными стенами. Температура воздуха от 5°С
+                            <strong>Нормы:</strong> СП 9.13130.2021
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Насосная ХПВ - Хозяйственно-питьевого водоснабжения</h3>
+                        <p class="card-desc">Насосная для системы водоснабжения дома</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 15-25 м²
+                            <strong>Размещение:</strong> Техподвал рядом с вводом ХВС. Допускается совместно с ИТП+НСП через перегородку
+                            <strong>Эвакуация:</strong> Выход в техподвал/коридор. На домах без пожарной насосной - желателен прямой выход на улицу
+                            <strong>Двери:</strong> Противопожарная (EI 30), открывается наружу, ширина ≥0.75 м, высота ≥1.9 м
+                            <strong>Вентиляция:</strong> Рекомендуется механическая вытяжка
+                            <strong>Пол:</strong> Вибровыбивающий
+                            <strong>Звукоизоляция:</strong> Рекомендуемо Rw ≥ 40 дБ
+                            <strong>Особые требования:</strong> Возможно размещение с ИТП через перегородку Rw ≥ 50 дБ. Расстояние до жилых спален ≥2 м
+                            <strong>Нормы:</strong> СП 54.13330
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Машинное помещение лифтов</h3>
+                        <p class="card-desc">Помещение для машины лифта и оборудования</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Габариты:</strong> Не более габаритов лифтового холла
+                            <strong>Размещение:</strong> Над/под машинным залом (в шахте или на крыше). При невозможности на крыше - в техподвале рядом с шахтой
+                            <strong>Эвакуация:</strong> Выход на технический этаж, лестничную клетку, крышу (не рекомендуется) или коридор. Расстояние до двери ≤25 м
+                            <strong>Двери:</strong> Обычная дверь (часто EI 30), ширина ≥0.8 м, высота ≥2.1 м
+                            <strong>Вентиляция:</strong> Естественная через дефлектор на вытяжку. Приток компенсируется через неплотности
+                            <strong>Огнестойкость:</strong> EI 60
+                            <strong>Звукоизоляция:</strong> К жилым помещениям - Rw ≥ 50 дБ
+                            <strong>Запреты:</strong> ЗАПРЕЩЕНО над/смежно с жилыми спальнями (максимум над коридорами)
+                            <strong>Нормы:</strong> СП 54.13330
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Помещение слаботочных систем</h3>
+                        <p class="card-desc">Для оборудования связи, безопасности, управления домом</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 4-6 м²
+                            <strong>Размещение:</strong> Рекомендуется на промежуточных или 1-х этажах. Размещение в подвалах допускается при жесткой гидроизоляции
+                            <strong>Двери:</strong> Противопожарные (EI 30-60), открываются по направлению выхода из здания
+                            <strong>Вентиляция:</strong> Механическая приточно-вытяжная
+                            <strong>Особые требования:</strong> Запрещен транзит труб водоснабжения, отопления, канализации
+                            <strong>Требования безопасности:</strong> Защита от затопления, надежная гидроизоляция
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Электрощитовая ВРУ - Вводно-распределительное устройство</h3>
+                        <p class="card-desc">Главный распределительный щит электроснабжения дома</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 25-30 м²
+                            <strong>Размещение:</strong> 1 этаж или техподвал. Рекомендуется близость к ТП. ЗАПРЕЩЕНО на незадымляемых лестничных клетках
+                            <strong>Эвакуация:</strong> Прямой выход на улицу или в коридор/лестничную клетку. Расстояние эвакуации ≤25 м
+                            <strong>Двери:</strong> Противопожарная (EI 60), открывается наружу, запоры легкооткрываемые, ширина ≥0.75 м
+                            <strong>Вентиляция:</strong> Рекомендуется механическая вентиляция
+                            <strong>Огнестойкость:</strong> EI 60, противопожарными перегородками
+                            <strong>Звукоизоляция:</strong> К соседним помещениям рекомендуется Rw ≥ 40 дБ
+                            <strong>Запреты:</strong> Не под "мокрыми" помещениями, не над жилыми комнатами, не под ними, не смежно. Запрещен транзит канализации. Не размещать в подвале при высоком УГВ
+                            <strong>Нормы:</strong> СП 31.110.2005
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Электрощитовая парковки РУ</h3>
+                        <p class="card-desc">Распределительное устройство для электроснабжения парковки</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 12-20 м²
+                            <strong>Размещение:</strong> В объеме автостоянки или соседство. Рекомендуется близость к ТП
+                            <strong>Эвакуация:</strong> Прямой выход в техподвал с доступом к эвакуационной лестнице
+                            <strong>Двери:</strong> Противопожарная (EI 60), открывается наружу, запоры "Антипаника", ширина ≥0.75 м
+                            <strong>Вентиляция:</strong> Рекомендуется механическая вентиляция. Жалюзи на фасаде
+                            <strong>Огнестойкость:</strong> EI 60
+                            <strong>Особые требования:</strong> Вентилируется. Доступ для электроснабжающей организации
+                            <strong>Нормы:</strong> СП 31.110.2005 + СП 42.13330
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Трансформаторная подстанция</h3>
+                        <p class="card-desc">Для силовых трансформаторов электроснабжения</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 25-40 м²
+                            <strong>Размещение:</strong> Техподвал парковки (встроенная), отдельно на участке или в благоустройстве. Максимально удалена от жилых
+                            <strong>Эвакуация:</strong> 2 ворота на улицу + 2 двери в парковку/улицу. Открывание наружу, самозапирающиеся замки. Ширина ≥0.75 м, высота 1.9 м
+                            <strong>Двери:</strong> Противопожарная (EI 90), открывается наружу, запоры "Антипаника", ширина ≥1.2 м, высота ≥2.1 м. Дверь на улицу - обычная
+                            <strong>Вентиляция:</strong> Обязательна естественная (жалюзи на противоположных стенах)
+                            <strong>Огнестойкость:</strong> Стены и потолок EI 90
+                            <strong>Звукоизоляция:</strong> Rw ≥ 55 дБ. Виброизоляция корпуса (пружины)
+                            <strong>Пол:</strong> Непроницаемый для масла
+                            <strong>Расстояния:</strong> До жилых помещений ≥2.5 м
+                            <strong>Нормы:</strong> СП 31.110.2005, ПУЭ 4.1.23
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Форкамера приточная</h3>
+                        <p class="card-desc">Камера перед приточной установкой для забора воздуха</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 6-10 м²
+                            <strong>Размещение:</strong> 1 этаж или техподвал рядом с наружной стеной. Рядом с приточной установкой. Вывод на фасад или благоустройство
+                            <strong>Двери:</strong> Простая дверь, ширина ≥0.6 м, открывается в сторону приточной установки
+                            <strong>Вентиляция:</strong> Не требуется (вспомогательное помещение)
+                            <strong>Обслуживание:</strong> Из коридора
+                            <strong>Звукоизоляция:</strong> Не требуется специальная
+                            <strong>Требования к воздухозабору:</strong> Решетка не ниже 2 м от земли на расстоянии не менее 8 м от: мусорных площадок, парковок, рамп, дорог, погрузо-разгрузочных зон, тепловыделяющего оборудования. Не со стороны фасада с интенсивным движением. На расстоянии менее 2 м от открытых мест - защита от перегрева
+                            <strong>Размещение решетки:</strong> Над входом в лестничную клетку из подвала, в заглубленных входных группах, на дворовых фасадах
+                            <strong>Нормы:</strong> СП 60.13330.2016 п.7.5.1
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Приточная установка</h3>
+                        <p class="card-desc">Оборудование для приема и подготовки воздуха</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> 15-25 м²
+                            <strong>Размещение:</strong> 1 этаж или техподвал рядом с форкамерой
+                            <strong>Эвакуация:</strong> Обслуживание из техподвала. Прямой доступ для ремонта
+                            <strong>Двери:</strong> Простая дверь, ширина ≥0.8 м (для прохода оборудования), открывается внутрь или наружу
+                            <strong>Вентиляция:</strong> Оборудование имеет встроенную вентиляцию
+                            <strong>Звукоизоляция:</strong> Шумоизоляция установки ≤70 дБ. Виброизоляция (пружины). К жилым комнатам - Rw ≥ 50 дБ (требуется дополнительная звукоизоляция)
+                            <strong>Пол:</strong> Гидроизолирован с уклоном. Конденсат не должен попадать на жилые помещения ниже
+                            <strong>Требования:</strong> Доступность для ремонта и обслуживания
+                            <strong>Нормы:</strong> СП 54.13330
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ТАБ: ПАРКОВКА ЭМ -->
+            <div id="em-parking" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Парковка электромобилей</h1>
+                    <p class="page-desc">Варианты размещения и требования по СП 113 и СП 551</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3 class="card-title">Открытая площадка С0/С1</h3>
+                        <p class="card-desc">Неограниченное количество ЭМ</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Количество ЭМ:</strong> Любое
+                            <strong>Класс:</strong> С0 / С1 (открытая)
+                            <strong>Зарядные:</strong> Любые типы
+                            <strong>Требования:</strong> Нет специальных ограничений
+                            <strong>Применение:</strong> Общественные, коммерческие парковки
+                            <strong>Стоимость:</strong> Минимальная
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Закрытая ≤1200 м²</h3>
+                        <p class="card-desc">Любое количество ЭМ без выделения</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> До 1200 м²
+                            <strong>Количество ЭМ:</strong> Любое
+                            <strong>Выделение на секции:</strong> Не требуется
+                            <strong>Требования вентиляции:</strong> Обязательна
+                            <strong>Требования пожара:</strong> Стандартные
+                            <strong>Класс:</strong> С2 / С3 (закрытая)
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Закрытая >1200 м² и ≤10 ЭМ</h3>
+                        <p class="card-desc">Без обязательного разделения</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Площадь:</strong> Более 1200 м²
+                            <strong>Количество ЭМ:</strong> До 10 машин
+                            <strong>Выделение на секции:</strong> Не требуется
+                            <strong>Система вентиляции:</strong> Обязательна
+                            <strong>Срок пересмотра:</strong> При добавлении ЭМ
+                            <strong>Примечание:</strong> При >10 ЭМ требуется разделение (СП 113 п.7.4)
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Разделение на секции EI 60+</h3>
+                        <p class="card-desc">Вариант А: стены EI 60 или выше</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Огнестойкость стены:</strong> EI 60 или выше
+                            <strong>По СП 113:</strong> п.7.4
+                            <strong>Количество ЭМ в секции:</strong> До 10 машин
+                            <strong>Требования:</strong> Герметичные двери между секциями
+                            <strong>Преимущества:</strong> Надёжное разделение пожарных зон
+                            <strong>Стоимость:</strong> Повышенная
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Разделение свободным пространством</h3>
+                        <p class="card-desc">Вариант Б: 8 м свободные пространства</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Расстояние между зонами:</strong> 8 м минимум
+                            <strong>По СП 113:</strong> п.7.3 (вариант Б)
+                            <strong>Требование:</strong> Без горючей нагрузки в зоне
+                            <strong>Преимущества:</strong> Нет стен, экономия
+                            <strong>Применение:</strong> Большие закрытые парковки
+                            <strong>Требования вентиляции:</strong> Общие
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Разделение с дренчерами</h3>
+                        <p class="card-desc">Вариант В: дренчеры 1 л/(с·м)</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Расстояние между зонами:</strong> 6 м
+                            <strong>Система дренчеров:</strong> 1 л/(сек·м)
+                            <strong>По СП 113:</strong> п.7.3 (вариант В)
+                            <strong>Требования пожара:</strong> Система орошения
+                            <strong>Преимущества:</strong> Компактнее чем 8м
+                            <strong>Стоимость систем:</strong> Средняя
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Требования к размещению воздухозабора</h3>
+                        <p class="card-desc">При >10 ЭМ в закрытых парковках</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>По СП 113 п.7.5.1:</strong> Воздухозаборная решетка должна быть:
+                            <strong>Расстояния:</strong> ≥8 м от мусорных площадок, автостоянок, рамп, дорог
+                            <strong>Высота:</strong> Не ниже 2.0 м от уровня земли
+                            <strong>Запреты:</strong> Со стороны фасада с интенсивным движением
+                            <strong>Защита:</strong> От выброса вытяжного воздуха систем дымоудаления (дистанция 5 м)
+                            <strong>Защита от перегрева:</strong> При близости <2 м от открытых мест/крыш
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ТАБ: ПОЛЫ АВТОСТОЯНКИ -->
+            <!-- ТАБ: ВЕНТИЛЯЦИЯ И САНТЕХНИКА -->
+            <div id="ventilation" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Вентиляция и сантехника</h1>
+                    <p class="page-desc">Инструкции по вентиляционным каналам и сантехническому оборудованию</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3 class="card-title">Приточные каналы и форкамеры</h3>
+                        <p class="card-desc">Система забора и подготовки воздуха</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Назначение:</strong> Забор и подготовка наружного воздуха
+                            <strong>Компоненты:</strong> Форкамера, приточная установка, воздуховоды
+                            <strong>Требования к расположению:</strong> Не менее 8 м от источников загрязнения
+                            <strong>Высота воздухозабора:</strong> Не ниже 2 м от земли
+                            <strong>Защита:</strong> От осадков, насекомых, шума
+                            <strong>Подробные схемы:</strong> См. изображения в справочнике (image1-image4)
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Вытяжные каналы и шахты</h3>
+                        <p class="card-desc">Система отвода воздуха из помещений</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Назначение:</strong> Отвод загрязненного воздуха из жилых помещений
+                            <strong>Типы:</strong> Естественная вытяжка, механическая вытяжка
+                            <strong>Размещение шахт:</strong> Вертикальные каналы в ядре дома
+                            <strong>Высота выхода:</strong> Выше крыши на 0.5-1.0 м
+                            <strong>Требования:</strong> Герметичность, разделение систем, защита от подпора
+                            <strong>Подробные схемы:</strong> См. изображения в справочнике (image5-image8)
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Система дымоудаления (ДВ)</h3>
+                        <p class="card-desc">Для эвакуации дыма при пожаре</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Назначение:</strong> Эвакуация дыма и горячего воздуха при пожаре
+                            <strong>Требования:</strong> Отдельная шахта, изолирована от других систем
+                            <strong>Вывод:</strong> Выше крыши, минимум на 2 м или с защитой НГ кровли
+                            <strong>Расстояние между ДВ:</strong> Не менее 5 м
+                            <strong>Люк доступа:</strong> Герметичный (EI 30), закрывается без ключа
+                            <strong>Компенсация:</strong> Система ПВ для компенсации отвода воздуха
+                            <strong>Подробные схемы:</strong> См. изображения в справочнике (image9-image11)
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Сантехническое оборудование</h3>
+                        <p class="card-desc">Трубопроводы ХВС, ГВС, канализация</p>
+                        <div class="card-link" onclick="toggleDetails(this)">Узнать подробнее →</div>
+                        <div class="card-details">
+                            <strong>Холодное водоснабжение (ХВС):</strong> Диаметры труб по расходу, скорость потока ≤1.5 м/с
+                            <strong>Горячее водоснабжение (ГВС):</strong> Температура 50-60°С, изоляция труб обязательна
+                            <strong>Канализация внутридомовая:</strong> Уклон 0.5-2%, диаметры по нормам, вентилирующие стояки
+                            <strong>Стояки:</strong> Диаметры 50-100 мм в зависимости от типа
+                            <strong>Изоляция:</strong> Звукоизоляция стояков от жилых помещений
+                            <strong>Требования к размещению:</strong> Видимые трассы в техподвале, скрытые в штробах
+                            <strong>Подробные схемы:</strong> См. изображения в справочнике (image12-image14)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ТАБ: О МЕТА -->
+            <div id="about" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">О МЕТА</h1>
+                </div>
+                
+                <div class="cards-grid" style="grid-template-columns: 1fr;">
+                    <div class="card">
+                        <h3 class="card-title">Справочники для архитектора</h3>
+                        <div class="card-details" style="border: none; padding: 0; margin-top: 0; display: block; max-height: none;">
+МЕТА — система интерактивных справочников для проектирования многоквартирных домов.
+
+<strong>Наша миссия:</strong> Упростить жизнь архитекторам, предоставив актуальную информацию о технических требованиях в одном месте.
+
+<strong>Что включает:</strong>
+- Справочники по техническим помещениям МКД
+- Рекомендации по парковкам и ЭМ
+- Варианты конструкций полов парковок
+- Требования по стандартам СП и ПУЭ
+
+<strong>Основа:</strong> Все справочники основаны на действующих:
+- СП 54.13330.2016 (многоквартирные дома)
+- СП 60.13330.2016 (ОВК и вентиляция)
+- СП 113.13330.2016 (стоянки автомобилей)
+- СП 551.1325800.2011 (ЭМ зарядные)
+
+<strong>Обновление:</strong> Справочники регулярно обновляются при изменении нормативов.
+
+<strong>Контакты:</strong> arch@meta.ru
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+            
+            document.querySelector('.main').scrollTop = 0;
+        }
+        
+        function toggleDetails(e) {
+            // Находим карточку по клику
+            const link = e.target || e;
+            const card = link.closest('.card');
+            if (!card) return;
+            
+            const details = card.querySelector('.card-details');
+            if (!details) return;
+            
+            // Переключаем видимость
+            const isExpanded = details.classList.toggle('expanded');
+            
+            // Меняем текст ссылки
+            if (isExpanded) {
+                link.textContent = 'Свернуть ↑';
+            } else {
+                link.textContent = 'Узнать подробнее →';
+            }
+        }
+    </script>
+</body>
+</html>
