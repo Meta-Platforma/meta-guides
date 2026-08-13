@@ -1,0 +1,19 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Здание -->
+  <g transform="translate(50, 50)">
+    <!-- Основание -->
+    <rect x="-25" y="-15" width="50" height="40" fill="#2C79EC" rx="2"/>
+    
+    <!-- Окна -->
+    <rect x="-20" y="-10" width="8" height="8" fill="white" rx="1"/>
+    <rect x="-8" y="-10" width="8" height="8" fill="white" rx="1"/>
+    <rect x="4" y="-10" width="8" height="8" fill="white" rx="1"/>
+    
+    <rect x="-20" y="2" width="8" height="8" fill="white" rx="1"/>
+    <rect x="-8" y="2" width="8" height="8" fill="white" rx="1"/>
+    <rect x="4" y="2" width="8" height="8" fill="white" rx="1"/>
+    
+    <!-- Труба вентиляции -->
+    <rect x="18" y="-18" width="4" height="8" fill="#2C79EC"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Зарядное устройство -->
+  <g transform="translate(50, 50)">
+    <!-- Корпус -->
+    <rect x="-12" y="-18" width="24" height="28" fill="#2C79EC" rx="2"/>
+    
+    <!-- Дисплей -->
+    <rect x="-8" y="-14" width="16" height="10" fill="white" rx="1"/>
+    
+    <!-- Кнопка включения -->
+    <circle cx="0" cy="8" r="3" fill="white"/>
+    
+    <!-- Кабель -->
+    <path d="M -8 16 Q -10 22, -8 28" stroke="#2C79EC" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

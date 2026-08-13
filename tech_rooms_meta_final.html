@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Технические помещения МКД</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8f9fc;
+            color: #1a1a1a;
+        }
+        
+        .header-top {
+            background: white;
+            padding: 16px 40px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-top .logo {
+            font-weight: 700;
+            font-size: 20px;
+            color: #1b5fd8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border: 2px solid #8b0000;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .header-top nav {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+        }
+        
+        .header-top nav a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .header-top nav a:hover {
+            color: #1b5fd8;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 40px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .main {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 0;
+            background: white;
+        }
+        
+        @media (max-width: 900px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .sidebar {
+            background: #f8f9fc;
+            padding: 24px;
+            border-right: 1px solid #e5e7eb;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+        
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+        
+        .room-button {
+            width: 100%;
+            padding: 11px 12px;
+            margin-bottom: 6px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1a1a1a;
+            transition: all 0.2s;
+            text-align: left;
+            line-height: 1.4;
+        }
+        
+        .room-button:hover {
+            border-color: #1b5fd8;
+            background: #f0f6ff;
+        }
+        
+        .room-button.active {
+            background: #1b5fd8;
+            color: white;
+            border-color: #1b5fd8;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 40px;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .info-empty {
+            text-align: center;
+            color: #999;
+            padding: 100px 40px;
+            font-size: 14px;
+        }
+        
+        .info-card {
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .room-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #1a1a1a;
+        }
+        
+        .room-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 28px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon-circle {
+            width: 32px;
+            height: 32px;
+            background: #f0f6ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #1b5fd8;
+            flex-shrink: 0;
+        }
+        
+        .param-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .param-card {
+            background: #f8f9fc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+        }
+        
+        .param-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+        
+        .param-value {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .text-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #666;
+        }
+        
+        .text-content ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        
+        .text-content li {
+            margin-bottom: 6px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 0 4px 4px 0;
+        }
+        
+        .badge-every-house {
+            background: #f0f6ff;
+            border: 1px solid #bfdbfe;
+            color: #0369a1;
+        }
+        
+        .badge-not-every {
+            background: #fefce8;
+            border: 1px solid #fcd34d;
+            color: #a16207;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin: 40px 0 20px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+        
+        .tab-button {
+            padding: 12px 16px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            margin-bottom: -1px;
+        }
+        
+        .tab-button:hover {
+            color: #1b5fd8;
+            border-bottom-color: #1b5fd8;
+        }
+        
+        .tab-button.active {
+            color: #1b5fd8;
+            border-bottom-color: #1b5fd8;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        table th {
+            background: #f8f9fc;
+            color: #1a1a1a;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #666;
+        }
+        
+        table tr:hover {
+            background: #f8f9fc;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            padding: 14px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER TOP -->
+    <div class="header-top">
+        <div class="logo">
+            <div class="logo-icon">🏠</div>
+            <span>МЕТА</span>
+        </div>
+        <nav>
+            <a href="#">Проекты</a>
+            <a href="#">Справочники</a>
+            <a href="#">Стандарты</a>
+            <a href="#">Контакты</a>
+        </nav>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Технические помещения МКД</h1>
+            <p>Интерактивный справочник требований, параметров и нормативных ссылок</p>
+        </div>
+        
+        <div class="main">
+            <!-- ЛЕВАЯ ПАНЕЛЬ -->
+            <div class="sidebar" id="sidebar">
+            </div>
+            
+            <!-- ПРАВАЯ ПАНЕЛЬ -->
+            <div class="content" id="content">
+                <div class="info-empty">
+                    👈 Выбери помещение из каталога<br><br>
+                    <small>Все требования основаны на действующих ГОСТ и СП</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ВКЛАДКИ -->
+        <div id="tabsContainer"></div>
+    </div>
+    
+    <script>
+        const rooms = {
+            "В КАЖДОМ ДОМЕ": [
+                {
+                    id: "kui",
+                    name: "КУИ (комната уборочного инвентаря)",
+                    access: "1 или подземный этаж",
+                    area: "3-4 м²",
+                    type: "every",
+                    params: [
+                        { label: "Вход", value: "Не менее 80 см" },
+                        { label: "Уровень", value: "Один уровень с лифтом" },
+                        { label: "Оснащение", value: "Туалет, поддон, раковина, полотенцесушитель" }
+                    ],
+                    requirements: "Место для хранения инвентаря и уборочных материалов",
+                    notes: "Размещается на одном уровне с лифтом для удобства доступа"
+                },
+                {
+                    id: "seasonal",
+                    name: "Зона хранения сезонного инвентаря",
+                    access: "На каждом уровне благоустройства",
+                    area: "8-10 м²",
+                    type: "every",
+                    params: [
+                        { label: "Дверной проем", value: "≥1.2 м, без порога" },
+                        { label: "Пандус/рампа", value: "Для техники 120 кг/ед" },
+                        { label: "Температура", value: "+12...+23°C" },
+                        { label: "Влажность", value: "<70%" }
+                    ],
+                    equipment: "Усиленные стеллажи, крюки на стенах, место для газонокосилки",
+                    requirements: "Сухое помещение, изолировано от жилой зоны",
+                    notes: "Хранение садового инвентаря и техники малой механизации"
+                },
+                {
+                    id: "pgm",
+                    name: "Помещение для ПГМ (противогололедные материалы)",
+                    access: "На каждом уровне благоустройства",
+                    area: "4-6 м²",
+                    type: "every",
+                    params: [
+                        { label: "Тип хранения", value: "Только на поддонах" },
+                        { label: "Изоляция", value: "От бытовой зоны" },
+                        { label: "Тип помещения", value: "Сухое" },
+                        { label: "Вентиляция", value: "Обязательна" }
+                    ],
+                    requirements: "Мешки не должны лежать на бетонном полу",
+                    notes: "Изолировано от жилого помещения, хранение солей и реагентов"
+                },
+                {
+                    id: "охрана",
+                    name: "Помещение для охраны",
+                    access: "На каждом уровне благоустройства",
+                    area: "4-6 м²",
+                    type: "every",
+                    params: [
+                        { label: "Электричество", value: "Обязательно" },
+                        { label: "Интернет", value: "Обязательно" },
+                        { label: "ТВ-стена", value: "Для видеонаблюдения" },
+                        { label: "Вентиляция", value: "Принудительная" }
+                    ],
+                    requirements: "Сухое помещение, стабильная электросеть",
+                    notes: "Центральное место для мониторинга и дежурства"
+                }
+            ],
+            "НЕ В КАЖДОМ ДОМЕ": [
+                {
+                    id: "dvorniki",
+                    name: "Персонал дворников",
+                    access: "Отдельный вход с фасада (во двор)",
+                    area: "30-40 м²",
+                    type: "not-every",
+                    workers_count: "8 человек на 6-8 домов",
+                    params: [
+                        { label: "Гардеробная", value: "10-12 м²" },
+                        { label: "Душевая", value: "1 кабина" },
+                        { label: "Обеденная зона", value: "10-15 м² на 4-6 мест" },
+                        { label: "Просушка", value: "2-3 м² с вентиляцией" }
+                    ],
+                    equipment: "Стиральная машина, холодильник, чайник, микроволновка",
+                    requirements: "Приточно-вытяжная вентиляция, кондиционирование",
+                    notes: "Зонирование: гардеробная, прием пищи, душевая, просушка"
+                },
+                {
+                    id: "uborshhicy",
+                    name: "Персонал уборщиц",
+                    access: "Отдельный вход с фасада (во двор)",
+                    area: "20 м²",
+                    type: "not-every",
+                    workers_count: "10 человек на 10 домов",
+                    params: [
+                        { label: "Раздевалка", value: "Для верхней одежды" },
+                        { label: "Санузел", value: "Умывальник, унитаз" },
+                        { label: "Обеденная зона", value: "8 посадочных мест" }
+                    ],
+                    equipment: "Стол, стулья, кухонный уголок, холодильник",
+                    requirements: "Вентиляция, отопление",
+                    notes: "Зонирование: раздевалка, зона приема пищи, санузел"
+                },
+                {
+                    id: "production",
+                    name: "Производственный персонал",
+                    access: "Отдельный вход с фасада (для оперативного выезда)",
+                    area: "40-55 м²",
+                    type: "not-every",
+                    workers_count: "16 человек на 15 домов",
+                    params: [
+                        { label: "Гардеробная", value: "10-12 м² с 16 шкафчиками" },
+                        { label: "Гигиена", value: "10 м² с душевой" },
+                        { label: "Обеденная", value: "10-15 м² на 8 мест" },
+                        { label: "Зона отдыха", value: "10 м² с кушеткой" }
+                    ],
+                    equipment: "Стиральная машина, холодильник, спальные места (2 шт)",
+                    requirements: "Приточно-вытяжная вентиляция, кондиционирование",
+                    notes: "Первый этаж или цокольный с пандусом"
+                },
+                {
+                    id: "workshop",
+                    name: "Слесарная мастерская",
+                    access: "Производственная зона",
+                    area: "15 м²",
+                    type: "not-every",
+                    params: [
+                        { label: "Отделка", value: "Негорючая (керамогранит)" },
+                        { label: "Освещение", value: "Общее + местное над верстаками" },
+                        { label: "Шумоизоляция", value: "Rw ≥ 50 дБ" },
+                        { label: "Вентиляция", value: "Приточно-вытяжная" }
+                    ],
+                    equipment: "Слесарный стол на 2 рабочих места, оборудование, средства пожаротушения",
+                    requirements: "Тяжелый пол, вытяжка для дыма",
+                    notes: "Работы по ремонту и изготовлению деталей"
+                },
+                {
+                    id: "painting",
+                    name: "Покрасочное помещение",
+                    access: "Производственная зона",
+                    area: "15 м²",
+                    type: "not-every",
+                    params: [
+                        { label: "Вентиляция", value: "Приточно-вытяжная с взрывозащитой" },
+                        { label: "Освещение", value: "Повышенной яркости" },
+                        { label: "Пол", value: "Гладкий, легко моется" },
+                        { label: "Безопасность", value: "Удаление паров растворителей" }
+                    ],
+                    equipment: "Слесарный стол на 2 места, полки для краски",
+                    requirements: "Удаление паров растворителей обязательно",
+                    notes: "Отделка и подготовка к окраске элементов дома"
+                }
+            ]
+        };
+        
+        function init() {
+            renderSidebar();
+            renderTabs();
+        }
+        
+        function renderSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            let html = '';
+            
+            for (const [category, items] of Object.entries(rooms)) {
+                html += `<div class="sidebar-section">
+                    <div class="sidebar-title">${category}</div>`;
+                
+                items.forEach(room => {
+                    html += `<button class="room-button" onclick="selectRoom('${room.id}')">
+                        <div style="margin-bottom: 4px; font-weight: 500;">${room.name}</div>
+                        <div style="font-size: 11px; color: #999; font-weight: 400;">${room.area}</div>
+                    </button>`;
+                });
+                
+                html += '</div>';
+            }
+            
+            sidebar.innerHTML = html;
+        }
+        
+        function selectRoom(roomId) {
+            let room = null;
+            for (const category of Object.values(rooms)) {
+                room = category.find(r => r.id === roomId);
+                if (room) break;
+            }
+            
+            if (!room) return;
+            
+            // Обновляю активную кнопку
+            document.querySelectorAll('.room-button').forEach((btn) => {
+                if (btn.textContent.includes(room.name)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            const badge = room.type === 'every' ? 'badge-every-house' : 'badge-not-every';
+            const badgeText = room.type === 'every' ? '✓ В каждом доме' : '⚠️ Опционально';
+            
+            let html = `
+                <div class="info-card">
+                    <div>
+                        <div class="room-title">${room.name}</div>
+                        <div class="room-subtitle">
+                            <span class="badge ${badge}">${badgeText}</span>
+                            Площадь: ${room.area}
+                            ${room.workers_count ? `<br>${room.workers_count}` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="icon-circle">📍</div>
+                            Размещение
+                        </div>
+                        <div class="text-content">${room.access}</div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="icon-circle">⚙️</div>
+                            Параметры
+                        </div>
+                        <div class="param-grid">
+                            ${room.params.map(p => `
+                                <div class="param-card">
+                                    <div class="param-label">${p.label}</div>
+                                    <div class="param-value">${p.value}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    ${room.equipment ? `
+                        <div class="section">
+                            <div class="section-title">
+                                <div class="icon-circle">🛠️</div>
+                                Оснащение
+                            </div>
+                            <div class="text-content">${room.equipment}</div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="section">
+                        <div class="section-title">
+                            <div class="icon-circle">📋</div>
+                            Требования
+                        </div>
+                        <div class="text-content">${room.requirements}</div>
+                    </div>
+                    
+                    ${room.notes ? `
+                        <div class="section">
+                            <div class="section-title">
+                                <div class="icon-circle">💡</div>
+                                Примечания
+                            </div>
+                            <div class="warning-box">${room.notes}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            document.getElementById('content').innerHTML = html;
+        }
+        
+        function renderTabs() {
+            const container = document.getElementById('tabsContainer');
+            
+            let html = `
+                <div style="padding: 40px; border-top: 1px solid #e5e7eb; background: white;">
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="switchTab('matrix')">📊 Матрица конфликтов</button>
+                        <button class="tab-button" onclick="switchTab('requirements')">📋 Требования</button>
+                        <button class="tab-button" onclick="switchTab('norms')">📚 Нормы</button>
+                    </div>
+                    
+                    <div id="tab-matrix" class="tab-content active">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Помещение 1</th>
+                                    <th>Помещение 2</th>
+                                    <th>Требование</th>
+                                    <th>Минимум</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>ИТП / Котельная</strong></td>
+                                    <td>Жилая спальня</td>
+                                    <td>Запрет соседства</td>
+                                    <td>≥3м или стена</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>НСП (насосная)</strong></td>
+                                    <td>Электрощитовая</td>
+                                    <td>Расстояние</td>
+                                    <td>≥1м через стену</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Производственный персонал</strong></td>
+                                    <td>Жилые помещения</td>
+                                    <td>Отдельный вход</td>
+                                    <td>С фасада (во двор)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="tab-requirements" class="tab-content">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Помещение</th>
+                                    <th>Площадь</th>
+                                    <th>Огнестойкость</th>
+                                    <th>Вентиляция</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>КУИ</strong></td>
+                                    <td>3-4 м²</td>
+                                    <td>—</td>
+                                    <td>Естественная</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Слесарная</strong></td>
+                                    <td>15 м²</td>
+                                    <td>—</td>
+                                    <td>Вытяжка</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Покрасочная</strong></td>
+                                    <td>15 м²</td>
+                                    <td>—</td>
+                                    <td>Приточно-вытяжная</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="tab-norms" class="tab-content">
+                        <div class="text-content">
+                            <p style="margin-bottom: 12px;"><strong>Основные нормативные документы:</strong></p>
+                            <ul style="margin-bottom: 16px;">
+                                <li>СП 54.13330.2022 — Жилые многоэтажные здания</li>
+                                <li>СП 60.13330.2020 — Отопление, вентиляция, кондиционирование</li>
+                                <li>СП 42.13330.2016 — Градостроительство</li>
+                                <li>СП 3.13130.2026 — Системы противопожарной защиты</li>
+                            </ul>
+                            <p><strong>Ключевые параметры:</strong></p>
+                            <ul>
+                                <li>Огнестойкость ИТП и НСП: <strong>минимум EI 60</strong></li>
+                                <li>Звукоизоляция: <strong>Rw ≥ 50 дБ от жилых</strong></li>
+                                <li>Вентиляция: <strong>принудительная вытяжка</strong> для инженерных</li>
+                                <li>Разделение: <strong>несущие конструкции между техническими и жилыми</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Инициализация
+        init();
+    </script>
+</body>
+</html>
